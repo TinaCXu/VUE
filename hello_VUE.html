@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<head>
+    <style>
+        .bg{
+            color: red;
+        }
+    </style>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <div class="bg" v-bind:id="bg1">
+            Hello World!
+            {{msg}}
+        </div>
+        <!-- do js math -->
+        {{ count }}
+        {{ (count+1)*10 }}
+        <!-- insert HTML -->
+        <div v-html="template"></div>
+        <!-- bind assertion -->
+        <a v-bind:href="url">Baidu</a>
+        <a :href="url1">Bilibili</a>
+        <!-- bind event -->
+        <button type="button" v-on:click="submit()">COUNT+1</button>
+        <button type="button" @click="submit2()">COUNT+2</button>
+    </div>
+    <div id="app2">
+        {{msg}}
+        <p>{{msg1}}</p>
+    </div>
+    <div id="app3">
+        {{msg}}
+        <!-- if current condition meet more than 1 if judgement, only the first judgement would be implement -->
+        <div v-if="count > 0">
+            count is more than 0, the value of count is: {{count}}
+        </div>
+        <div v-else-if="count < 0 && count > -5">
+            count is more than -5 and less than 0, the value of count is: {{count}}
+        </div>
+        <div v-else>
+            the value of count is: {{count}}
+        </div>
+        <div v-show="count == -1">show:{{count}}</div>
+    </div>
+    <div id="app4">
+        {{msg}}
+        <div v-for="item in list">
+            <div v-if="item.age > 20" 
+                v-bind:style="style1"
+                :class="['active','add','more',{'another':item.age < 30}]">
+                {{item.name}}
+            </div>
+            <div v-else>
+                {{item.age}}
+            </div>
+        </div>
+    </div>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                bg1: 'app-bind',
+                msg: 'Hello VUE!!',
+                count: 0,
+                template: '<div>Hello Template</div>',
+                url: 'http://www.baidu.com',
+                url1: 'https://www.bilibili.com/',
+            },
+            methods: {
+                submit: function(){
+                    this.count ++
+                    // this represents Vue
+                },
+                submit2: function(){
+                    this.count =+2
+                },
+            }
+        })
+        // watch and computed
+        var arr = 'show the change if element in msg1 change'
+        var app2 = new Vue({
+            el: '#app2',
+            data: {
+                msg: 'Watch and Computed',
+                another: 'another Computed!',
+            },
+            watch: {
+                msg: function (newval, oldval) {
+                    console.log('newval is '+ newval)
+                    console.log('oldval is '+ oldval)
+                }
+            },
+            computed: {
+                msg1: function(){
+                    return 'computed ' + this.msg + ', ' + this.another + ', '+ arr
+                }
+            },
+        })
+        var app3 = new Vue({
+            el: '#app3',
+            data: {
+                msg: 'v-if and v-show',
+                count: 0,
+            }
+        })
+        var app4 = new Vue({
+            el: '#app4',
+            data: {
+                msg: 'v-for',
+                style1: {
+                    color: 'red',
+                    'text-shadow': '0 0 5px #232323',
+                },
+                list: [{
+                    name: 'Mary',
+                    age: 18,
+                },{
+                    name: 'Sammy',
+                    age: 25,
+                }]
+            }
+        })
+    </script>
+
+</body>
