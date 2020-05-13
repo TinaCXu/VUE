@@ -2,6 +2,7 @@
     <div>List
         <ul>
             <li v-for="(item,index) in pageLists" :key="index">
+                <!-- index为当前项的索引 -->
                 {{item.title}}-{{item.content}}
             </li>
         </ul>
