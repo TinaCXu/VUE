@@ -29,6 +29,7 @@ export default {
             })
             this.title = ''
             this.content = ''
+            this.$router.push('/home/list')
 
         }
     }

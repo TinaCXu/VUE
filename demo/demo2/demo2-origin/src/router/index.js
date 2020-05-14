@@ -5,7 +5,6 @@ import Login from '../views/Login.vue'
 import Add from '../views/Add.vue'
 
 Vue.use(VueRouter)
-
   const routes = [
   {
     path: '/',
@@ -40,7 +39,9 @@ Vue.use(VueRouter)
 ]
 
 const router = new VueRouter({
-  routes
+  routes,
+  linkActiveClass:'active',
+
 })
 
 export default router
