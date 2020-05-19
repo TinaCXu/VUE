@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<head>
+    <title>Vue Basics</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.11/vue.min.js"></script>
+    <style>
+        .canvas{
+            width: 300px;
+            height: 300px;
+            margin-top: 20px;
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Vue Basics</h1>
+    <div id='app'>
+        <p v-if="showName">My name is {{ name }}</p>
+        <button @click="toggleName">showName: {{showName}}</button>
+        <!-- <input type="text" @keyup="updateName"> -->
+        <!-- two way binding:using v-model, using method to update data, the HTML related to the data will update at the same time -->
+        <input type="text" v-model='name'>
+        <!-- associate the name input with the data name, if we change input then data will change, if we change data the input will change -->
+        <h2>{{ title }}</h2>
+        <button @click='logEvent'>Log Event</button>
+        <div class='canvas' @mousemove='logCoords'>{{ coords.x}}, {{ coords.y }}</div>
+    </div>
+    <script src='basic.js'></script>
+</body>
+</html>
