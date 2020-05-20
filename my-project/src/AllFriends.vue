@@ -2,7 +2,7 @@
     <div id="all-friends">
         <h2>All Friends</h2>
         <div v-for="(friend, index) in friends" :key="index">
-            <span>{{ friend.name}}</span>
+            <span @click="unfriend(friend.name)">{{ friend.name}}</span>
         </div>
     </div>
 </template>
@@ -14,6 +14,12 @@ export default {
     props: ['friends'],
     data() {
         return{
+        }
+    },
+    methods: {
+        unfriend(name){
+            // $emit:make custom event from this component:'delete'-name of the custom event, then optional parameter wanted to send with custom event
+            this.$emit('delete',{name:name})
         }
     }
 }

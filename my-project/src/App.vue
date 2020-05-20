@@ -3,9 +3,11 @@
     <h1>{{ title }}</h1>
     <!-- the component we imported, self-closed -->
     <Navbar />
+    <Blogs />
     <!-- two component share the same data, move the data into App.vue and bind attribute to these component -->
     <!-- in component vue, should respectively bind prop which has the same name with :friends -->
-    <AllFriends :friends="friends" />
+    <!-- @delete is the event emited by component vue -->
+    <AllFriends :friends="friends" @delete="deleteFriend"/>
     <OnlineFriends :friends="friends" />
   </div>
 </template>
@@ -14,12 +16,14 @@
 import Navbar from './Navbar'
 import OnlineFriends from './OnlineFriends'
 import AllFriends from './AllFriends'
+import Blogs from './Blogs'
 export default {
   name: 'app',
   // register the component we import to this App.vue
   components: {
     // Navbar: Navbar -we can do this if both name are same
     Navbar,
+    Blogs,
     OnlineFriends,
     AllFriends
   },
@@ -32,6 +36,14 @@ export default {
           { name: 'Cara', online: true},
           { name: 'Dora', online: false},
       ]
+    }
+  },
+  methods:{
+    deleteFriend(payload){
+      // filter friends and refresh the data friends
+      this.friends = this.friends.filter(friends =>{
+        return friends.name !== payload.name
+      })
     }
   }
 }
