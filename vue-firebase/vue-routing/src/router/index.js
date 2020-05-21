@@ -3,6 +3,7 @@ import Router from 'vue-router'
 // @ means get the root of the project
 import Home from '@/components/Home'
 import About from '@/components/About'
+import ViewProfile from '@/components/ViewProfile'
 
 Vue.use(Router)
 
@@ -18,6 +19,13 @@ export default new Router({
       name: 'About',
       component: About
     },
+    {
+      path: '/profile/:user_id',
+      // :user_id is the parameters of route
+      name: 'ViewProfile',
+      component: ViewProfile
+    },
+
 
   ]
 })
