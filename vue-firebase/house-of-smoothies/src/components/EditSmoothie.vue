@@ -1,14 +1,14 @@
 <template>
-    <div class="add-smoothie container">
-        <h2 class="center-align indigo-text">Add New Smoothie Recipe</h2>
-        <form @submit.prevent="AddSmoothie">
+    <div v-if="smoothie" class="edit-smoothie container">
+        <h2>Edit {{ smoothie.title }} Smoothie</h2>
+        <form @submit.prevent="EditSmoothie">
             <div class="field title">
                 <label for="title">Smoothie Title:</label>
-                <input type="text" name="title" v-model="title">
+                <input type="text" name="title" v-model="smoothie.title">
             </div>
-            <div v-for="(ing, index) in ingredients" :key="index" class="field">
+            <div v-for="(ing, index) in smoothie.ingredients" :key="index" class="field">
                 <label for="ingredient">ingredient:</label>
-                <input type="text" name="ingredient" v-model="ingredients[index]">
+                <input type="text" name="ingredient" v-model="smoothie.ingredients[index]">
                 <i class="material-icons delete" @click="deleteIng(ing)">delete</i>
                 <!-- v-model cannot bind ing, cause ing is not in data -->
             </div>
@@ -18,42 +18,39 @@
             </div>
             <div class="field center-align">
                 <p v-if="feedback" class="red-text">{{ feedback }}</p>
-                <button class="btn pink">Add Smoothie</button>
+                <button class="btn pink">Update Smoothie</button>
             </div>
         </form>
     </div>
-    
 </template>
 <script>
 import db from '@/firebase/init'
 import slugify from 'slugify'
 
 export default {
-    name:'AddSmoothie',
+    name: 'edit-smoothie',
     data(){
         return{
-            title: null,
+            smoothie: null,
             another: null,
-            ingredients: [],
             feedback: null,
-            slug: null
         }
     },
     methods: {
-        AddSmoothie(){
-            if(this.title){
+        EditSmoothie(){
+            if(this.smoothie.title){
                 this.feedback = null
                 // create a slug
-                this.slug = slugify(this.title, {
+                this.smoothie.slug = slugify(this.smoothie.title, {
                     // replace space
                     replacement: '-',
                     remove: /[$*_+~.()'"!\-:@]/g,
                     lower: true
                 })
-                db.collection('smoothies').add({
-                    title: this.title,
-                    ingredients: this.ingredients,
-                    slug: this.slug
+                db.collection('smoothies').doc(this.smoothie.id).update({
+                    title: this.smoothie.title,
+                    ingredients: this.smoothie.ingredients,
+                    slug: this.smoothie.slug
                 }).then(() => {
                     this.$router.push({ name:'Index' })
                 }).catch(err => {
@@ -65,8 +62,8 @@ export default {
         },
         addIng(){
             if(this.another){
-                this.ingredients.push(this.another)
-                console.log(this.ingredients)
+                this.smoothie.ingredients.push(this.another)
+                console.log(this.smoothie.ingredients)
                 this.another = null
                 this.feedback = null
             }else{
@@ -74,28 +71,42 @@ export default {
             }
         },
         deleteIng(ing){
-            this.ingredients = this.ingredients.filter(ingredients => {
+            this.smoothie.ingredients = this.smoothie.ingredients.filter(ingredients => {
                 return ingredients != ing
             })
         }
+
+    },
+    created(){
+        // get the firestore variable and store is as local variable
+        // normally would use .doc(id), but there is no id but only slug,so we use where(3 params: property in database, valuation, equal to what)
+        let ref = db.collection('smoothies').where('slug', '==', this.$route.params.smoothie_slug)
+        // retrieve the data, use snapshot to represent what is returned
+        ref.get().then(snapshot => {
+            snapshot.forEach(doc => {
+                console.log(doc.data())
+                this.smoothie = doc.data()
+                this.smoothie.id = doc.id
+            })
+        })
     }
 }
 </script>
 <style>
-.add-smoothie{
+.edit-smoothie{
     margin-top: 60px;
     padding: 20px;
     max-width: 500px;
 }
-.add-smoothie h2{
+.edit-smoothie h2{
     font-size: 2em;
     margin: 20px auto;
 }
-.add-smoothie .field{
+.edit-smoothie .field{
     margin: 20px auto;
     position: relative;
 }
-.add-smoothie .delete{
+.edit-smoothie .delete{
     position: absolute;
     right: 0;
     bottom: 16px;
