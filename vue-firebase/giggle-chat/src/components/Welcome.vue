@@ -6,6 +6,7 @@
         <form @submit.prevent="enterChat">
           <label for="name">Enter you name:</label>
           <input type="text" name="name" v-model="name">
+          <p v-if="feedback" class="red-text">{{ feedback }}</p>
           <button class="btn teal">Enter Chat</button>
         </form>
       </div>
@@ -18,12 +19,19 @@ export default {
   name: 'Welcome',
   data () {
     return {
-      name: null
+      name: null,
+      feedback: null,
     }
   },
   methods: {
     enterChat(){
-      console.log(this.name)
+      if (this.name){
+        // using props to send params, and the property is 'params' rather than 'props' 
+        // the first 'name' is the name of router you want to render, the second name is the name of props that will accepted by rendered HTML
+        this.$router.push({ name: 'Chat', params: { name: this.name }})
+      }else{
+        this.feedback = 'You must enter a name to join'
+      }
     }
   }
 }
